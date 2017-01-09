@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark" >
+
+    <!--请登录-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:paddingTop="@dimen/nav_header_vertical_spacing">
+
+        <ImageView
+            android:id="@+id/iv_nav_user_head_img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/nav_headimg_defalut" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/homepage_please_login"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <!--我的收藏 + 离线下载-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
+
+        <!--我的收藏-->
+        <TextView
+            android:id="@+id/tv_nav_backup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/nav_myfavorite"
+            android:gravity="center"
+            android:text="我的收藏"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <!--离线下载-->
+        <TextView
+            android:id="@+id/tv_nav_download"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/nav_offline_download"
+            android:gravity="center"
+            android:text="离线下载"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>
