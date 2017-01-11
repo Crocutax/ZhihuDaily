@@ -1,0 +1,13 @@
+# Created by .ignore support plugin (hsz.mobi)
+# Gradle files
+.gradle/
+.idea/
+
+# others
+build/
+gradle
+gradle.properties
+gradlew
+gradlew.bat
+local.properties
+ZhihuDaily.iml

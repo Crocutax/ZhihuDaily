@@ -20,20 +20,21 @@
 
         <ImageView
             android:id="@+id/iv_nav_user_head_img"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/nav_headimg_defalut" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="8dp"
             android:text="@string/homepage_please_login"
             android:textSize="16sp"/>
     </LinearLayout>
 
     <!--我的收藏 + 离线下载-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
