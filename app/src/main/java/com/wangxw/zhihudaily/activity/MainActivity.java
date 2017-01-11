@@ -1,12 +1,10 @@
 package com.wangxw.zhihudaily.activity;
 
-import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,11 +12,12 @@ import android.view.View;
 
 import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.R;
+import com.wangxw.zhihudaily.base.BaseActivity;
+import com.wangxw.zhihudaily.presenter.MainPresenter;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
+public class MainActivity extends BaseActivity<MainPresenter> implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -28,16 +27,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+    protected void addWindowFeature() {
+    }
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected MainPresenter bindPresenter() {
+        return new MainPresenter();
+    }
+
+    @Override
+    protected void initView() {
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(this);
         toggle.syncState();
+    }
+
+    @Override
+    protected void initListener() {
+        drawerLayout.addDrawerListener(this);
         navView.setNavigationItemSelectedListener(this);
     }
 
@@ -62,10 +75,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_night_mode:
-                Snackbar.make(getWindow().getDecorView(), "夜间模式", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView(),R.string.action_night_mode, Snackbar.LENGTH_SHORT).show();
                 break;
             case R.id.action_settings:
-                Snackbar.make(getWindow().getDecorView(), "设置选项", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView(),R.string.action_settings, Snackbar.LENGTH_SHORT).show();
                 break;
             default:
                 break;

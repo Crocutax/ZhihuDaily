@@ -1,7 +1,6 @@
 package com.wangxw.zhihudaily.base;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -14,7 +13,7 @@ import butterknife.ButterKnife;
  * E-mail:wangxw725@163.com
  * function:
  */
-public abstract class BaseActivity<T> extends AppCompatActivity{
+public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity{
 
     protected T presenter;
 
@@ -25,10 +24,9 @@ public abstract class BaseActivity<T> extends AppCompatActivity{
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         presenter = (T)bindPresenter();
-
         initView();
-        initData(savedInstanceState);
         initListener();
+        presenter.initData(savedInstanceState);
         ActivityManager.addActivity(this);
     }
 
@@ -42,9 +40,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity{
 
     /**初始化View*/
     protected abstract void initView();
-
-    /**初始化数据*/
-    protected abstract void initData(Bundle savedInstanceState);
 
     /**初始化监听器*/
     protected abstract void initListener();
