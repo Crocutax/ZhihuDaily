@@ -1,15 +1,17 @@
 package com.wangxw.zhihudaily.base;
 
-import android.os.Bundle;
 
 /**
  * Created by wangxw on 2017/1/11.
  * E-mail : wangxw725@163.com
  * function :
  */
+public abstract class BasePresenter<V extends BaseIView> {
 
-public interface BasePresenter {
+    protected V mView;
 
-    /**初始化数据*/
-    void initData(Bundle savedInstanceState);
+    public BasePresenter(V mView) {
+        this.mView = mView;
+    }
+
 }

@@ -24,6 +24,7 @@
 
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_main_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -43,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"/>
         </FrameLayout>
+
 
         <!-- Stories-->
         <android.support.v7.widget.RecyclerView

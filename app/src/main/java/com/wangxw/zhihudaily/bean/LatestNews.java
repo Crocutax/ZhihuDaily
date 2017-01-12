@@ -39,4 +39,13 @@ public class LatestNews {
     public void setTop_stories(List<NewsItem> top_stories) {
         this.top_stories = top_stories;
     }
+
+    @Override
+    public String toString() {
+        return "LatestNews{" +
+                "date='" + date + '\'' +
+                ", stories=" + stories +
+                ", top_stories=" + top_stories +
+                '}';
+    }
 }

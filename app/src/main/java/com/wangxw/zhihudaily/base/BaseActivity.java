@@ -13,9 +13,9 @@ import butterknife.ButterKnife;
  * E-mail:wangxw725@163.com
  * function:
  */
-public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity{
+public abstract class BaseActivity<T extends BaseIPresenter> extends AppCompatActivity{
 
-    protected T presenter;
+    protected T mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,10 +23,10 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         addWindowFeature();
         setContentView(getLayoutId());
         ButterKnife.bind(this);
-        presenter = (T)bindPresenter();
+        mPresenter = (T)bindPresenter();
         initView();
         initListener();
-        presenter.initData(savedInstanceState);
+        mPresenter.initData(savedInstanceState);
         ActivityManager.addActivity(this);
     }
 

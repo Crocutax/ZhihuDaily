@@ -56,4 +56,15 @@ public class NewsItem {
     public void setImages(List<String> images) {
         this.images = images;
     }
+
+    @Override
+    public String toString() {
+        return "NewsItem{" +
+                "title='" + title + '\'' +
+                ", ga_prefix='" + ga_prefix + '\'' +
+                ", type=" + type +
+                ", id=" + id +
+                ", images=" + images +
+                '}';
+    }
 }

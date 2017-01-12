@@ -1,6 +1,7 @@
 package com.wangxw.zhihudaily.api;
 
 
+import com.wangxw.zhihudaily.Constants;
 import com.wangxw.zhihudaily.MyApplication;
 import com.wangxw.zhihudaily.utils.NetworkUtil;
 
@@ -88,6 +89,7 @@ public class ApiManager {
             OkHttpClient okHttpClient = builder.build();
             Retrofit retrofit = new Retrofit.Builder()
                     .client(okHttpClient)
+                    .baseUrl(Constants.HTTP_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
