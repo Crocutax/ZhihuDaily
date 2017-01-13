@@ -8,4 +8,6 @@ package com.wangxw.zhihudaily;
 public interface Constants {
 
     String HTTP_BASE_URL = "http://news-at.zhihu.com/api/4/";
+    int ITEM_DATE = 0;
+    int ITEM_STORY = 1;
 }

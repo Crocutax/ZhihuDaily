@@ -12,9 +12,9 @@ public class LatestNews {
     /**日期*/
     private String date;
     /**当日新闻*/
-    private List<NewsItem> stories;
+    private List<Story> stories;
     /**ViewPager顶部滚动新闻*/
-    private List<NewsItem> top_stories;
+    private List<TopStory> top_stories;
 
     public String getDate() {
         return date;
@@ -24,19 +24,19 @@ public class LatestNews {
         this.date = date;
     }
 
-    public List<NewsItem> getStories() {
+    public List<Story> getStories() {
         return stories;
     }
 
-    public void setStories(List<NewsItem> stories) {
+    public void setStories(List<Story> stories) {
         this.stories = stories;
     }
 
-    public List<NewsItem> getTop_stories() {
+    public List<TopStory> getTop_stories() {
         return top_stories;
     }
 
-    public void setTop_stories(List<NewsItem> top_stories) {
+    public void setTop_stories(List<TopStory> top_stories) {
         this.top_stories = top_stories;
     }
 

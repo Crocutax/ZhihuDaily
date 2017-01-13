@@ -1,16 +1,14 @@
 package com.wangxw.zhihudaily.adapter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.R;
-import com.wangxw.zhihudaily.bean.NewsItem;
+import com.wangxw.zhihudaily.bean.TopStory;
 
 import java.util.List;
 
@@ -19,18 +17,18 @@ import java.util.List;
  * E-mail:wangxw725@163.com
  * function:
  */
-public class MainPagerAdapter extends PagerAdapter {
+public class MainViewPagerAdapter extends PagerAdapter {
 
 
-    private List<NewsItem> topNews;
+    private List<TopStory> topStories;
 
-    public MainPagerAdapter(List<NewsItem> topNews) {
-        this.topNews = topNews;
+    public MainViewPagerAdapter(List<TopStory> topStories) {
+        this.topStories = topStories;
     }
 
     @Override
     public int getCount() {
-        return topNews==null ? 0 : topNews.size();
+        return topStories ==null ? 0 : topStories.size();
     }
 
     @Override
@@ -40,11 +38,10 @@ public class MainPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Logger.i("instantiateItem:"+position+ "..新闻数量:"+topNews.size());
         Context context = container.getContext();
         ImageView imageView = (ImageView) View.inflate(context, R.layout.item_viewpager_imageview,null);
 
-        Glide.with(context).load(topNews.get(position).getImages().get(0)).into(imageView);
+        Glide.with(context).load(topStories.get(position).getImage()).into(imageView);
         container.addView(imageView);
         return imageView;
     }

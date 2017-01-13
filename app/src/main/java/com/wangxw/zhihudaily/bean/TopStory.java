@@ -1,21 +1,17 @@
 package com.wangxw.zhihudaily.bean;
 
-import java.util.List;
-
 /**
  * Created by wangxw on 2017/1/11 0011.
  * E-mail:wangxw725@163.com
  * function: 新闻子条目
  */
-public class NewsItem {
+public class TopStory {
 
-    /**标题*/
     private String title;
     private String ga_prefix;
     private int type;
     private int id;
-    /**图片集合*/
-    private List<String> images;
+    private String image;
 
     public String getTitle() {
         return title;
@@ -49,22 +45,22 @@ public class NewsItem {
         this.id = id;
     }
 
-    public List<String> getImages() {
-        return images;
+    public String getImage() {
+        return image;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
     public String toString() {
-        return "NewsItem{" +
+        return "Story{" +
                 "title='" + title + '\'' +
                 ", ga_prefix='" + ga_prefix + '\'' +
                 ", type=" + type +
                 ", id=" + id +
-                ", images=" + images +
+                ", images=" + image +
                 '}';
     }
 }

@@ -45,7 +45,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                 .subscribe(new Subscriber<LatestNews>() {
                     @Override
                     public void onCompleted() {
-                        Logger.i("onCompleted");
                     }
 
                     @Override
@@ -55,8 +54,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                     @Override
                     public void onNext(LatestNews latestNews) {
-                        Logger.i(latestNews.toString());
-                        mView.initViewPager( latestNews.getTop_stories());
+                        mView.initViewData(latestNews);
                     }
                 });
     }

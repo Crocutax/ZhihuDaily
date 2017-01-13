@@ -1,70 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context="com.wangxw.zhihudaily.activity.MainActivity">
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="?attr/actionBarSize" />
 
     </android.support.design.widget.AppBarLayout>
 
-
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_main_refresh"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--Top Stories-->
-        <FrameLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/srl_main_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/vp_main_topstories"
+            <!--Top Stories-->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/ll_main_topstories_dots"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
-        </FrameLayout>
+                <com.jude.rollviewpager.RollPagerView
+                    android:id="@+id/vp_main_topstories"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    app:rollviewpager_play_delay="2000" />
 
+                <LinearLayout
+                    android:id="@+id/ll_main_topstories_dots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </FrameLayout>
 
-        <!-- Stories-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_main_stories"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <!-- Stories-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_main_stories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-   <!-- <RelativeLayout
-        android:id="@+id/content_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.wangxw.zhihudaily.activity.MainActivity"
-        tools:showIn="@layout/activity_main_content_view">
-    </RelativeLayout>-->
-
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

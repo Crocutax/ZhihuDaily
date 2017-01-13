@@ -1,35 +1,38 @@
 package com.wangxw.zhihudaily.activity;
 
-import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.jude.rollviewpager.RollPagerView;
 import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.R;
-import com.wangxw.zhihudaily.adapter.MainPagerAdapter;
+import com.wangxw.zhihudaily.adapter.MainRecycleViewAdapter;
+import com.wangxw.zhihudaily.adapter.MainViewPagerAdapter;
 import com.wangxw.zhihudaily.base.BaseActivity;
-import com.wangxw.zhihudaily.bean.NewsItem;
+import com.wangxw.zhihudaily.bean.LatestNews;
+import com.wangxw.zhihudaily.bean.Story;
 import com.wangxw.zhihudaily.contract.MainContract;
 import com.wangxw.zhihudaily.presenter.MainPresenter;
+import com.wangxw.zhihudaily.utils.TimeUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, ViewPager.OnPageChangeListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -38,7 +41,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.vp_main_topstories)
-    ViewPager vpMainTopstories;
+    RollPagerView vpMainTopstories;
     @BindView(R.id.ll_main_topstories_dots)
     LinearLayout llMainTopstoriesDots;
     @BindView(R.id.rv_main_stories)
@@ -66,6 +69,15 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
+        srlMainRefresh.setColorSchemeResources(R.color.colorPrimary);
+
+        vpMainTopstories.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Logger.i("屏幕宽:"+getWindowManager().getDefaultDisplay().getWidth()+"...ViewPager宽:"+vpMainTopstories.getWidth());
+                vpMainTopstories.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            }
+        });
     }
 
     @Override
@@ -76,7 +88,6 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         srlMainRefresh.post(new Runnable() {
             @Override
             public void run() {
-                Logger.i("开始刷新");
                 srlMainRefresh.setRefreshing(true);
                 mPresenter.getNewsFromServer();
             }
@@ -162,38 +173,40 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     }
 
     @Override
-    public void initViewPager(List<NewsItem> topNews) {
-        srlMainRefresh.setRefreshing(false);
-        Logger.i("initViewPager");
-        MainPagerAdapter pagerAdapter = new MainPagerAdapter(topNews);
-        vpMainTopstories.setAdapter(pagerAdapter);
-        vpMainTopstories.addOnPageChangeListener(this);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        Logger.i("position:" + position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        vpMainTopstories.removeOnPageChangeListener(this);
-    }
-
-    @Override
     public void onRefresh() {
         mPresenter.getNewsFromServer();
         Toast.makeText(this, "onRefresh", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void initViewData(LatestNews latestNews) {
+        srlMainRefresh.setRefreshing(false);
+        //todo 如果刷新数据源,需要多次new adapter吗?
+        MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(latestNews.getTop_stories());
+        vpMainTopstories.setAdapter(pagerAdapter);
+
+        rvMainStories.setLayoutManager(new LinearLayoutManager(this));
+        MainRecycleViewAdapter recycleViewAdapter = new MainRecycleViewAdapter(getRecycleViewDatas(latestNews));
+        rvMainStories.setAdapter(recycleViewAdapter);
+        Logger.i("Story数量:"+getRecycleViewDatas(latestNews).size());
+    }
+
+    /**
+     *
+     * @param latestNews
+     * @return
+     */
+    private List<Story> getRecycleViewDatas(LatestNews latestNews) {
+        List<Story> storyList = latestNews.getStories();
+
+        //日期Item
+        Story story = new Story();
+        story.setStoryDateItem(true);
+        story.setTitle(TimeUtil.formatData(latestNews.getDate()));
+
+        storyList.add(0,story);
+        return storyList;
+    }
+
+
 }

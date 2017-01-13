@@ -2,7 +2,8 @@ package com.wangxw.zhihudaily.contract;
 
 import com.wangxw.zhihudaily.base.BaseIView;
 import com.wangxw.zhihudaily.base.BaseIPresenter;
-import com.wangxw.zhihudaily.bean.NewsItem;
+import com.wangxw.zhihudaily.bean.LatestNews;
+import com.wangxw.zhihudaily.bean.TopStory;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public interface MainContract {
 
     interface View extends BaseIView {
-        void initViewPager(List<NewsItem> topNews);
+        void initViewData(LatestNews latestNews);
     }
 
     interface Presenter extends BaseIPresenter {

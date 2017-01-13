@@ -15,7 +15,7 @@ public class Theme {
     private String name;
     private String image;
     private String image_source;
-    private List<NewsItem> stories;
+    private List<Story> stories;
     private List<Editor> editors;
 
     public String getDescription() {
@@ -66,11 +66,11 @@ public class Theme {
         this.image_source = image_source;
     }
 
-    public List<NewsItem> getStories() {
+    public List<Story> getStories() {
         return stories;
     }
 
-    public void setStories(List<NewsItem> stories) {
+    public void setStories(List<Story> stories) {
         this.stories = stories;
     }
 
