@@ -10,10 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.jude.rollviewpager.OnItemClickListener;
+import com.jude.rollviewpager.RollPagerView;
 import com.orhanobut.logger.Logger;
-import com.wangxw.zhihudaily.Constants;
 import com.wangxw.zhihudaily.R;
+import com.wangxw.zhihudaily.bean.LatestNews;
 import com.wangxw.zhihudaily.bean.Story;
+import com.wangxw.zhihudaily.bean.TopStory;
+import com.wangxw.zhihudaily.utils.TimeUtil;
 
 import java.util.List;
 
@@ -27,94 +31,192 @@ import butterknife.ButterKnife;
  */
 public class MainRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Story> storyList;
+    /**头布局*/
+    private static final int TYPE_HEADER = 0;
+    /**日期*/
+    private static final int TYPE_DATE = 1;
+    /**新闻*/
+    private static final int TYPE_STORY = 2;
 
-    public MainRecycleViewAdapter(List<Story> storyList) {
-        this.storyList = storyList;
+    private List<Story> storyList;
+    private List<TopStory> topStoryList;
+
+
+    public void setData(LatestNews latestNews){
+        storyList = getRecycleViewStoryList(latestNews);
+        topStoryList = latestNews.getTop_stories();
+        notifyDataSetChanged();
     }
 
-    public void addNewsData(List<Story> storyList) {
-        this.storyList.addAll(storyList);
-        notifyDataSetChanged();
+    /**
+     * 添加新的Stories
+     * @param latestNews
+     */
+    public void addStories(LatestNews latestNews) {
+        int lastPosition = storyList.size()+1;
+        storyList.addAll(getRecycleViewStoryList(latestNews));
+        //布局刷新
+        notifyItemInserted(lastPosition);
+    }
+
+    /**
+     * 给Story添加日期
+     * @param latestNews
+     * @return
+     */
+    private List<Story> getRecycleViewStoryList(LatestNews latestNews) {
+        List<Story> storyList = latestNews.getStories();
+
+        //日期Item
+        Story story = new Story();
+        story.setStoryDateItem(true);
+        story.setTitle(TimeUtil.formatData(latestNews.getDate()));
+
+        storyList.add(0,story);
+        return storyList;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return storyList.get(position).isStoryDateItem() ? Constants.ITEM_DATE : Constants.ITEM_STORY;
+        if(position==0){
+            return TYPE_HEADER;
+        }else if(storyList.get(position-1).isStoryDateItem()){
+            return TYPE_DATE;
+        }else {
+            return TYPE_STORY;
+        }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == Constants.ITEM_DATE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycleview_date_title, parent, false);
-        } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycleview_story, parent, false);
+        RecyclerView.ViewHolder holder = null;
+        switch (viewType){
+            case TYPE_HEADER:
+                holder = new HeaderItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycleview_header,parent,false));
+                break;
+            case TYPE_DATE:
+                holder = new DateItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycleview_date_title, parent, false));
+                break;
+            case TYPE_STORY:
+                holder = new StoryItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycleview_story, parent, false));
+                break;
+            default:
+                break;
         }
-        return new DateItemViewHolder(view);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Story story = storyList.get(position);
-        //日期标题 Item
-        if(story.isStoryDateItem()){
-            Logger.i("日期标题");
-            DateItemViewHolder dateHolder = (DateItemViewHolder) holder;
-            dateHolder.tvRecycleViewItemDateTitle.setText(story.getTitle());
-        }else {
-            Logger.i("Story");
-            //Story Item
-            StoryItemViewHolder storyHoler = (StoryItemViewHolder) holder;
-
-            storyHoler.tvMainRecycleviewNewsTitle.setText(story.getTitle());
-            //根据是否已读设置标题颜色
-            storyHoler.tvMainRecycleviewNewsTitle.setTextColor(
-                            story.isRead() ? Color.GRAY : Color.BLACK);
-
-            //根据图片数量.设置不同的UI
-            String[] images = story.getImages();
-            if(images==null || images.length==0){
-                //无图
-                storyHoler.ivMainRecycleviewThumbnailImage.setImageResource(R.drawable.img_recycleview_item_placeholder);
-            }else {
-                if(images.length>1){
-                    //多图
-                    storyHoler.ivMainRecycleviewMultipic.setVisibility(View.VISIBLE);
-                }
-                    Glide
-                        .with(storyHoler.ivMainRecycleviewMultipic.getContext())
-                        .load(story.getImages()[0])
-                        .into(storyHoler.ivMainRecycleviewMultipic);
-            }
-
+        Story story = null;
+        if(position>0) {
+            story = storyList.get(position-1);
         }
+        int itemViewType = holder.getItemViewType();
+        switch (itemViewType)   {
+            case TYPE_HEADER:
+                ((HeaderItemViewHolder) holder).setData(topStoryList);
+                break;
+            case TYPE_DATE:
+                ((DateItemViewHolder) holder).setData(story.getTitle());
+                break;
+            case TYPE_STORY:
+                ((StoryItemViewHolder)holder).setData(story);
+                break;
+            default:
+                break;
+        };
     }
 
     @Override
     public int getItemCount() {
-        return storyList != null ? storyList.size() : 0;
+        return storyList != null ? (storyList.size()+1) : 0;
     }
 
+    /**
+     * 头布局
+     */
+    class HeaderItemViewHolder extends RecyclerView.ViewHolder{
 
-    static class StoryItemViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.rvp_main_topstories)
+        RollPagerView rvpMainTopstories;
+
+        public HeaderItemViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+        }
+
+        public void setData(final List<TopStory> topStoryList) {
+            rvpMainTopstories.setAdapter(new MainViewPagerAdapter(topStoryList));
+
+            rvpMainTopstories.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    if(topStoryItemClickListener!=null){
+                        topStoryItemClickListener.onTopStoryItemClick(topStoryList.get(position));
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 内容条目
+     */
+     class StoryItemViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.news_list_card_view)
+        CardView newsListCardView;
         @BindView(R.id.tv_main_recycleview_news_title)
         TextView tvMainRecycleviewNewsTitle;
         @BindView(R.id.iv_main_recycleview_thumbnail_image)
         ImageView ivMainRecycleviewThumbnailImage;
         @BindView(R.id.iv_main_recycleview_multipic)
         ImageView ivMainRecycleviewMultipic;
-        @BindView(R.id.news_list_card_view)
-        CardView newsListCardView;
 
         StoryItemViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
+
+        public void setData(final Story story) {
+            tvMainRecycleviewNewsTitle.setText(story.getTitle());
+            //根据是否已读设置标题颜色
+            tvMainRecycleviewNewsTitle.setTextColor(
+                    story.isRead() ? Color.GRAY : Color.BLACK);
+
+            //根据图片数量.设置不同的UI
+            String[] images = story.getImages();
+            if(images==null || images.length==0){
+                //无图
+                ivMainRecycleviewThumbnailImage.setImageResource(R.drawable.img_recycleview_item_placeholder);
+            }else {
+                if(images.length>1){
+                    //多图
+                    ivMainRecycleviewMultipic.setVisibility(View.VISIBLE);
+                    Logger.d("显示多图标志");
+                }
+                Glide
+                    .with(ivMainRecycleviewThumbnailImage.getContext())
+                    .load(story.getImages()[0])
+                    .into(ivMainRecycleviewThumbnailImage);
+            }
+
+            newsListCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(storyItemClickListener!=null){
+                        storyItemClickListener.onStoryItemClick(story);
+                    }
+                }
+            });
+        }
     }
 
-
-    static class DateItemViewHolder extends RecyclerView.ViewHolder{
+    /**
+     * 日期条目
+     */
+    class DateItemViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.tv_recycleView_item_date_title)
         TextView tvRecycleViewItemDateTitle;
 
@@ -122,5 +224,37 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(view);
             ButterKnife.bind(this, view);
         }
+        public void setData(String title) {
+            tvRecycleViewItemDateTitle.setText(title);
+        }
+    }
+
+
+    /**
+     * 顶部ViewPager Item 点击事件
+     */
+    private TopStoryItemClickListener topStoryItemClickListener;
+
+    public interface TopStoryItemClickListener {
+
+        void onTopStoryItemClick(TopStory topStory);
+    }
+
+    public void setTopStoryItemClickListener(TopStoryItemClickListener topStoryItemClickListener) {
+        this.topStoryItemClickListener = topStoryItemClickListener;
+    }
+
+
+    /**
+     * RecycleView Story条目点击事件
+     */
+    private StoryItemClickListener storyItemClickListener;
+
+    public interface StoryItemClickListener{
+        void onStoryItemClick(Story story);
+    }
+
+    public void setStoryItemClickListener(StoryItemClickListener storyItemClickListener) {
+        this.storyItemClickListener = storyItemClickListener;
     }
 }

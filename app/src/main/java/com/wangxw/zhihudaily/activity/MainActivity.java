@@ -8,29 +8,29 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.jude.rollviewpager.RollPagerView;
 import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.R;
 import com.wangxw.zhihudaily.adapter.MainRecycleViewAdapter;
-import com.wangxw.zhihudaily.adapter.MainViewPagerAdapter;
+import com.wangxw.zhihudaily.api.ApiManager;
 import com.wangxw.zhihudaily.base.BaseActivity;
 import com.wangxw.zhihudaily.bean.LatestNews;
+import com.wangxw.zhihudaily.bean.NewsDetail;
 import com.wangxw.zhihudaily.bean.Story;
+import com.wangxw.zhihudaily.bean.TopStory;
 import com.wangxw.zhihudaily.contract.MainContract;
 import com.wangxw.zhihudaily.presenter.MainPresenter;
-import com.wangxw.zhihudaily.utils.TimeUtil;
-
-import java.util.List;
 
 import butterknife.BindView;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -40,14 +40,12 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @BindView(R.id.vp_main_topstories)
-    RollPagerView vpMainTopstories;
-    @BindView(R.id.ll_main_topstories_dots)
-    LinearLayout llMainTopstoriesDots;
     @BindView(R.id.rv_main_stories)
     RecyclerView rvMainStories;
     @BindView(R.id.srl_main_refresh)
     SwipeRefreshLayout srlMainRefresh;
+    private LinearLayoutManager rvLayoutManager;
+    private MainRecycleViewAdapter rvAdapter;
 
     @Override
     protected void addWindowFeature() {
@@ -71,13 +69,11 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         toggle.syncState();
         srlMainRefresh.setColorSchemeResources(R.color.colorPrimary);
 
-        vpMainTopstories.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Logger.i("屏幕宽:"+getWindowManager().getDefaultDisplay().getWidth()+"...ViewPager宽:"+vpMainTopstories.getWidth());
-                vpMainTopstories.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-        });
+        //配置RecycleView
+        rvLayoutManager = new LinearLayoutManager(this);
+        rvMainStories.setLayoutManager(rvLayoutManager);
+        rvAdapter = new MainRecycleViewAdapter();
+        rvMainStories.setAdapter(rvAdapter);
     }
 
     @Override
@@ -90,6 +86,41 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
             public void run() {
                 srlMainRefresh.setRefreshing(true);
                 mPresenter.getNewsFromServer();
+            }
+        });
+
+        rvMainStories.addOnScrollListener(MyScrollListener);
+
+        rvAdapter.setTopStoryItemClickListener(new MainRecycleViewAdapter.TopStoryItemClickListener() {
+            @Override
+            public void onTopStoryItemClick(TopStory topStory) {
+                ApiManager.getZhihuApi()
+                        .getNewsDetail(topStory.getId())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<NewsDetail>() {
+                            @Override
+                            public void onCompleted() {
+                                Logger.d("加载完毕");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.d(e.toString());
+                            }
+
+                            @Override
+                            public void onNext(NewsDetail newsDetail) {
+                                Logger.d(newsDetail.toString());
+                            }
+                        });
+            }
+        });
+
+        rvAdapter.setStoryItemClickListener(new MainRecycleViewAdapter.StoryItemClickListener() {
+            @Override
+            public void onStoryItemClick(Story story) {
+
             }
         });
     }
@@ -123,7 +154,6 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
             default:
                 break;
         }
-        ;
         return super.onOptionsItemSelected(item);
     }
 
@@ -159,12 +189,10 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     @Override
     public void onDrawerOpened(View drawerView) {
-        Logger.i("Drawer-Open");
     }
 
     @Override
     public void onDrawerClosed(View drawerView) {
-        Logger.i("Drawer-Closed");
     }
 
     @Override
@@ -181,32 +209,26 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     @Override
     public void initViewData(LatestNews latestNews) {
         srlMainRefresh.setRefreshing(false);
-        //todo 如果刷新数据源,需要多次new adapter吗?
-        MainViewPagerAdapter pagerAdapter = new MainViewPagerAdapter(latestNews.getTop_stories());
-        vpMainTopstories.setAdapter(pagerAdapter);
-
-        rvMainStories.setLayoutManager(new LinearLayoutManager(this));
-        MainRecycleViewAdapter recycleViewAdapter = new MainRecycleViewAdapter(getRecycleViewDatas(latestNews));
-        rvMainStories.setAdapter(recycleViewAdapter);
-        Logger.i("Story数量:"+getRecycleViewDatas(latestNews).size());
+        rvAdapter.setData(latestNews);
     }
 
-    /**
-     *
-     * @param latestNews
-     * @return
-     */
-    private List<Story> getRecycleViewDatas(LatestNews latestNews) {
-        List<Story> storyList = latestNews.getStories();
-
-        //日期Item
-        Story story = new Story();
-        story.setStoryDateItem(true);
-        story.setTitle(TimeUtil.formatData(latestNews.getDate()));
-
-        storyList.add(0,story);
-        return storyList;
+    @Override
+    public void loadBeforeStories(LatestNews latestNews) {
+        rvAdapter.addStories(latestNews);
     }
+
+
+    private OnScrollListener MyScrollListener  = new  OnScrollListener(){
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if(newState== RecyclerView.SCROLL_STATE_IDLE
+                    && (rvLayoutManager.findLastVisibleItemPosition()==rvAdapter.getItemCount()-1)){
+                mPresenter.loadBeforStories();
+            }
+        }
+    };
 
 
 }

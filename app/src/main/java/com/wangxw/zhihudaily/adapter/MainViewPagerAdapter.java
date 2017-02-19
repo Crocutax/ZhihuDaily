@@ -1,10 +1,11 @@
 package com.wangxw.zhihudaily.adapter;
 
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wangxw.zhihudaily.R;
@@ -37,13 +38,17 @@ public class MainViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Context context = container.getContext();
-        ImageView imageView = (ImageView) View.inflate(context, R.layout.item_viewpager_imageview,null);
+    public View instantiateItem(ViewGroup container, int position) {
+        View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_viewpager_imageview, container, false);
+        ImageView imageView = (ImageView) view.findViewById(R.id.iv_item_viewpager_img);
+        TextView textView = (TextView) view.findViewById(R.id.tv_item_viewpager_des);
 
-        Glide.with(context).load(topStories.get(position).getImage()).into(imageView);
-        container.addView(imageView);
-        return imageView;
+        TopStory topStory = topStories.get(position);
+        Glide.with(container.getContext()).load(topStory.getImage()).into(imageView);
+        textView.setText(topStory.getTitle());
+
+        container.addView(view);
+        return view;
     }
 
     @Override

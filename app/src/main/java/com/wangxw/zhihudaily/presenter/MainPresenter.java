@@ -21,6 +21,8 @@ import rx.schedulers.Schedulers;
 
 public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter{
 
+    private String mCurrentDate;
+
     public MainPresenter(MainContract.View mView) {
         super(mView);
     }
@@ -55,6 +57,32 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                     @Override
                     public void onNext(LatestNews latestNews) {
                         mView.initViewData(latestNews);
+                        mCurrentDate =latestNews.getDate();
+                    }
+                });
+    }
+
+    @Override
+    public void loadBeforStories() {
+        ApiManager.getZhihuApi()
+                .getBeforeNews(mCurrentDate)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<LatestNews>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i("onError:"+e.toString());
+                    }
+
+                    @Override
+                    public void onNext(LatestNews latestNews) {
+                        mCurrentDate = latestNews.getDate();
+                        mView.loadBeforeStories(latestNews);
                     }
                 });
     }

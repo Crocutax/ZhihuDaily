@@ -147,6 +147,15 @@ public class NewsDetail {
         public void setName(String name) {
             this.name = name;
         }
+
+        @Override
+        public String toString() {
+            return "Section{" +
+                    "thumbnail='" + thumbnail + '\'' +
+                    ", id=" + id +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
     }
 
     public static class Recommenders {
@@ -160,5 +169,30 @@ public class NewsDetail {
         public void setAvatar(String avatar) {
             this.avatar = avatar;
         }
+
+        @Override
+        public String toString() {
+            return "Recommenders{" +
+                    "avatar='" + avatar + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "NewsDetail{" +
+                "body='" + body + '\'' +
+                ", image_source='" + image_source + '\'' +
+                ", title='" + title + '\'' +
+                ", image='" + image + '\'' +
+                ", share_url='" + share_url + '\'' +
+                ", ga_prefix='" + ga_prefix + '\'' +
+                ", section=" + section +
+                ", type=" + type +
+                ", id=" + id +
+                ", js=" + js +
+                ", recommenders=" + recommenders +
+                ", css=" + css +
+                '}';
     }
 }

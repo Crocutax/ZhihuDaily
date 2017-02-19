@@ -21,6 +21,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:theme="@style/AppTheme.PopupOverlay"
         app:headerLayout="@layout/activity_main_nav_header_view"
         app:menu="@menu/menu_drawer"/>
 
