@@ -41,10 +41,6 @@ public class NetworkUtil {
         NetworkInfo info = conn.getActiveNetworkInfo();
         if (info != null && info.isConnected()
                 && info.getType() == ConnectivityManager.TYPE_WIFI) {
-            WifiManager wifiManager = (WifiManager) context
-                    .getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            Toast.makeText(context, "连接的wifi网络的id为：" + wifiInfo.getNetworkId(), Toast.LENGTH_SHORT).show();
             return true;
         } else {
             return false;

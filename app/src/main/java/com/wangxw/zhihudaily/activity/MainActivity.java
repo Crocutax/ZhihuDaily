@@ -1,5 +1,6 @@
 package com.wangxw.zhihudaily.activity;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -15,24 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.R;
 import com.wangxw.zhihudaily.adapter.MainRecycleViewAdapter;
-import com.wangxw.zhihudaily.api.ApiManager;
 import com.wangxw.zhihudaily.base.BaseActivity;
 import com.wangxw.zhihudaily.bean.LatestNews;
-import com.wangxw.zhihudaily.bean.NewsDetail;
 import com.wangxw.zhihudaily.bean.Story;
 import com.wangxw.zhihudaily.bean.TopStory;
 import com.wangxw.zhihudaily.contract.MainContract;
-import com.wangxw.zhihudaily.presenter.MainPresenter;
+import com.wangxw.zhihudaily.presenter.MainIPresenter;
 
 import butterknife.BindView;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity<MainContract.IPresenter> implements MainContract.IView, NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -49,6 +44,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     @Override
     protected void addWindowFeature() {
+
     }
 
     @Override
@@ -57,13 +53,13 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     }
 
     @Override
-    protected MainPresenter bindPresenter() {
-        return new MainPresenter(this);
+    protected MainIPresenter bindPresenter() {
+        return new MainIPresenter(this);
     }
 
 
     @Override
-    protected void initView() {
+    protected void initView(Bundle savedInstanceState) {
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
@@ -94,33 +90,19 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         rvAdapter.setTopStoryItemClickListener(new MainRecycleViewAdapter.TopStoryItemClickListener() {
             @Override
             public void onTopStoryItemClick(TopStory topStory) {
-                ApiManager.getZhihuApi()
-                        .getNewsDetail(topStory.getId())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<NewsDetail>() {
-                            @Override
-                            public void onCompleted() {
-                                Logger.d("加载完毕");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Logger.d(e.toString());
-                            }
-
-                            @Override
-                            public void onNext(NewsDetail newsDetail) {
-                                Logger.d(newsDetail.toString());
-                            }
-                        });
+                Story story = new Story();
+                story.setTitle(topStory.getTitle());
+                story.setId(topStory.getId());
+                story.setImages(new String[]{topStory.getImage()});
+                startActivity(StoryDetailActivity.getIntent(MainActivity.this,story));
             }
         });
 
         rvAdapter.setStoryItemClickListener(new MainRecycleViewAdapter.StoryItemClickListener() {
             @Override
             public void onStoryItemClick(Story story) {
-
+                //todo 改变已读标记,存储进数据库
+                startActivity(StoryDetailActivity.getIntent(MainActivity.this,story));
             }
         });
     }

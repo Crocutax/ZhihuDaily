@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.wangxw.zhihudaily.presenter.StoryDetailPresenter;
 import com.wangxw.zhihudaily.utils.ActivityManager;
 
 import butterknife.ButterKnife;
@@ -24,9 +25,8 @@ public abstract class BaseActivity<T extends BaseIPresenter> extends AppCompatAc
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         mPresenter = (T)bindPresenter();
-        initView();
+        initView(savedInstanceState);
         initListener();
-        mPresenter.initData(savedInstanceState);
         ActivityManager.addActivity(this);
     }
 
@@ -38,8 +38,9 @@ public abstract class BaseActivity<T extends BaseIPresenter> extends AppCompatAc
     /**绑定Presenter*/
     protected abstract T bindPresenter();
 
-    /**初始化View*/
-    protected abstract void initView();
+    /**初始化View
+     * @param savedInstanceState*/
+    protected abstract void initView(Bundle savedInstanceState);
 
     /**初始化监听器*/
     protected abstract void initListener();

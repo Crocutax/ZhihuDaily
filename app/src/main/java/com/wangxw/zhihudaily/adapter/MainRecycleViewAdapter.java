@@ -187,19 +187,19 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             //根据图片数量.设置不同的UI
             String[] images = story.getImages();
-            if(images==null || images.length==0){
-                //无图
-                ivMainRecycleviewThumbnailImage.setImageResource(R.drawable.img_recycleview_item_placeholder);
-            }else {
-                if(images.length>1){
-                    //多图
-                    ivMainRecycleviewMultipic.setVisibility(View.VISIBLE);
-                    Logger.d("显示多图标志");
-                }
+            if(images!=null && images.length>0){
                 Glide
                     .with(ivMainRecycleviewThumbnailImage.getContext())
                     .load(story.getImages()[0])
                     .into(ivMainRecycleviewThumbnailImage);
+            }else {
+                //无图
+                ivMainRecycleviewThumbnailImage.setImageResource(R.drawable.img_recycleview_item_placeholder);
+            }
+
+            if(story.isMultipic()){
+                ivMainRecycleviewMultipic.setVisibility(View.VISIBLE);
+                Logger.d("显示多图标志");
             }
 
             newsListCardView.setOnClickListener(new View.OnClickListener() {

@@ -11,6 +11,4 @@ public interface BaseIPresenter <V extends BaseIView> {
 
     void bindView(V view);
 
-    /**初始化数据*/
-    void initData(Bundle savedInstanceState);
 }

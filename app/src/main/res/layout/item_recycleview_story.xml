@@ -35,12 +35,15 @@
             android:src="@drawable/img_recycleview_item_placeholder" />
     </LinearLayout>
 
+    <!--multipic-->
     <ImageView
         android:id="@+id/iv_main_recycleview_multipic"
         android:layout_width="46dp"
         android:layout_height="20dp"
         android:layout_gravity="bottom|right"
-        android:src="@drawable/img_recycleview_item_multi"
-        android:visibility="gone" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="gone"
+        android:src="@drawable/img_recycleview_item_multi" />
 
 </android.support.v7.widget.CardView>

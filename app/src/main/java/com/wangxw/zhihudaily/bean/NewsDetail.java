@@ -18,7 +18,6 @@ public class NewsDetail {
     private Section section;
     private int type;
     private int id;
-    private List<?> js;
     private List<Recommenders> recommenders;
     private List<String> css;
 
@@ -92,14 +91,6 @@ public class NewsDetail {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public List<?> getJs() {
-        return js;
-    }
-
-    public void setJs(List<?> js) {
-        this.js = js;
     }
 
     public List<Recommenders> getRecommenders() {
@@ -190,7 +181,6 @@ public class NewsDetail {
                 ", section=" + section +
                 ", type=" + type +
                 ", id=" + id +
-                ", js=" + js +
                 ", recommenders=" + recommenders +
                 ", css=" + css +
                 '}';

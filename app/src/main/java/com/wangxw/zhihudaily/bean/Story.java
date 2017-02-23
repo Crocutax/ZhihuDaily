@@ -1,5 +1,9 @@
 package com.wangxw.zhihudaily.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,7 +12,7 @@ import java.util.List;
  * E-mail:wangxw725@163.com
  * function: 新闻子条目
  */
-public class Story {
+public class Story implements Serializable{
 
     /**标题*/
     private String title;
@@ -16,6 +20,7 @@ public class Story {
     private int type;
     private int id;
     private String[] images;
+    private boolean multipic;
 
     /**自主添加字段:是否是新闻日期 Item*/
     private boolean isStoryDateItem;
@@ -62,6 +67,14 @@ public class Story {
         this.images = images;
     }
 
+    public boolean isMultipic() {
+        return multipic;
+    }
+
+    public void setMultipic(boolean multipic) {
+        this.multipic = multipic;
+    }
+
     public boolean isStoryDateItem() {
         return isStoryDateItem;
     }
@@ -78,6 +91,7 @@ public class Story {
         isRead = read;
     }
 
+
     @Override
     public String toString() {
         return "Story{" +
@@ -86,6 +100,7 @@ public class Story {
                 ", type=" + type +
                 ", id=" + id +
                 ", images=" + Arrays.toString(images) +
+                ", multipic=" + multipic +
                 ", isStoryDateItem=" + isStoryDateItem +
                 ", isRead=" + isRead +
                 '}';

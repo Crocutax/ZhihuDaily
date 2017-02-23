@@ -19,22 +19,17 @@ import rx.schedulers.Schedulers;
  * function :
  */
 
-public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter{
+public class MainIPresenter extends BasePresenter<MainContract.IView> implements MainContract.IPresenter {
 
     private String mCurrentDate;
 
-    public MainPresenter(MainContract.View mView) {
-        super(mView);
+    public MainIPresenter(MainContract.IView mIView) {
+        super(mIView);
     }
 
     @Override
     public void bindView(BaseIView view) {
-        mView = (MainContract.View) view;
-    }
-
-    @Override
-    public void initData(Bundle savedInstanceState) {
-
+        mView = (MainContract.IView) view;
     }
 
     @Override
