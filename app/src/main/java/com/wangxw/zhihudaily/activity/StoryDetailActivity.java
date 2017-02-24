@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.R;
 import com.wangxw.zhihudaily.base.BaseActivity;
@@ -37,6 +39,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +119,6 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
 
     }
 
-
     @Override
     public void inlfateData(NewsDetail newsDetail) {
         //有可能出现无图的情况
@@ -182,7 +185,6 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
 
         html = html.replace("<div class=\"img-place-holder\">", "");
         html = replaceImgTagFromHTML(html, autoLoad, nightMode);
-        Logger.d("autoLoad:"+autoLoad+"..nightMode:"+nightMode+"..largeFont:"+largeFont);
         Logger.d(html);
 
         webviewStoryContent.loadDataWithBaseURL("x-data://base", html, "text/html", "UTF-8", null);
@@ -213,6 +215,33 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
         return doc.html();
     }
 
+    @JavascriptInterface
+    public void loadImage(final String imgPath) {
+        if (TextUtils.isEmpty(imgPath)) {
+            return;
+        }
+        Logger.d("加载图片");
+        webviewStoryContent.post(new Runnable() {
+            @Override
+            public void run() {
+                Glide.with(StoryDetailActivity.this).load(imgPath)
+                        .downloadOnly(new SimpleTarget<File>() {
+                            @Override
+                            public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
+                                String str = "file://" + resource.getAbsolutePath();//加载完成的图片地址
+                                try {
+                                    String[] arrayOfString = new String[2];
+                                    arrayOfString[0] = URLEncoder.encode(imgPath,"UTF-8");//旧url
+                                    arrayOfString[1] = str;
+                                    onImageLoadingComplete("onImageLoadingComplete", arrayOfString);
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+            }
+        });
+    }
+
     @Override
     public void setLoadingViewVisible(boolean isVisible) {
         pbLoading.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
@@ -222,6 +251,11 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
     @JavascriptInterface
     public void clickHtmlImg(String imgUrl){
         Toast.makeText(this, "imgUrl:"+imgUrl, Toast.LENGTH_SHORT).show();
+    }
+
+    public final void onImageLoadingComplete(String funName, String[] paramArray) {
+        String str = "'" + TextUtils.join("','", paramArray) + "'";
+        webviewStoryContent.loadUrl("javascript:" + funName + "(" + str + ");");
     }
 
 }
