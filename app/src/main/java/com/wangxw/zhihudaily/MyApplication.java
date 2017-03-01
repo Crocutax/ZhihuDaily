@@ -2,7 +2,6 @@ package com.wangxw.zhihudaily;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.MutableContextWrapper;
 
 import com.orhanobut.logger.Logger;
 

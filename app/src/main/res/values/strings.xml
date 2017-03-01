@@ -15,4 +15,13 @@
     <string name="action_night_mode">夜间模式</string>
     <string name="action_settings">设置选项</string>
 
+
+    <!--新闻详情页ToolBar菜单-->
+    <string name="menu_share">分享</string>
+    <string name="menu_star">收藏</string>
+    <string name="menu_stared">已收藏</string>
+    <string name="menu_comment">评论</string>
+    <string name="menu_like">点赞</string>
+    <string name="menu_liked">已赞</string>
+
 </resources>

@@ -182,7 +182,7 @@ public class NewsDetail {
                 ", type=" + type +
                 ", id=" + id +
                 ", recommenders=" + recommenders +
-                ", css=" + css +
+                ", assets.css=" + css +
                 '}';
     }
 }

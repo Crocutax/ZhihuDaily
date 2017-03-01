@@ -1,7 +1,5 @@
 package com.wangxw.zhihudaily.presenter;
 
-import android.os.Bundle;
-
 import com.orhanobut.logger.Logger;
 import com.wangxw.zhihudaily.api.ApiManager;
 import com.wangxw.zhihudaily.base.BaseIView;
@@ -50,7 +48,6 @@ public class StoryDetailPresenter extends BasePresenter<StoryDetailContract.IVie
 
                     @Override
                     public void onNext(NewsDetail newsDetail) {
-                        Logger.d(newsDetail.toString());
                         //todo 缓存
                         mView.inlfateData(newsDetail);
                     }
