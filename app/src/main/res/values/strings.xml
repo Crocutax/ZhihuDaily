@@ -18,10 +18,10 @@
 
     <!--新闻详情页ToolBar菜单-->
     <string name="menu_share">分享</string>
-    <string name="menu_star">收藏</string>
-    <string name="menu_stared">已收藏</string>
+    <string name="menu_collect">收藏</string>
+    <string name="menu_collected">已收藏</string>
     <string name="menu_comment">评论</string>
-    <string name="menu_like">点赞</string>
-    <string name="menu_liked">已赞</string>
+    <string name="menu_praise">点赞</string>
+    <string name="menu_praised">已赞</string>
 
 </resources>

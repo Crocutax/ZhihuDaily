@@ -6,7 +6,9 @@ import com.wangxw.zhihudaily.base.BaseIView;
 import com.wangxw.zhihudaily.base.BasePresenter;
 import com.wangxw.zhihudaily.bean.NewsDetail;
 import com.wangxw.zhihudaily.bean.Story;
+import com.wangxw.zhihudaily.bean.StoryExtra;
 import com.wangxw.zhihudaily.contract.StoryDetailContract;
+import com.wangxw.zhihudaily.utils.TransformUtil;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -29,11 +31,10 @@ public class StoryDetailPresenter extends BasePresenter<StoryDetailContract.IVie
     }
 
     @Override
-    public void initData(Story story) {
+    public void initData(int storyId) {
         ApiManager.getZhihuApi()
-                .getNewsDetail(story.getId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .getNewsDetail(storyId)
+                .compose(TransformUtil.<NewsDetail>defaultSchedulers())
                 .subscribe(new Subscriber<NewsDetail>() {
                     @Override
                     public void onCompleted() {
@@ -52,6 +53,30 @@ public class StoryDetailPresenter extends BasePresenter<StoryDetailContract.IVie
                         mView.inlfateData(newsDetail);
                     }
                 });
+    }
+
+    @Override
+    public void getStoreExtra(int storyId) {
+        ApiManager.getZhihuApi()
+                .getStoreExtra(storyId)
+                .compose(TransformUtil.<StoryExtra>defaultSchedulers())
+                .subscribe(new Subscriber<StoryExtra>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.setLoadingViewVisible(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.setLoadingViewVisible(false);
+                    }
+
+                    @Override
+                    public void onNext(StoryExtra storyExtra) {
+                        mView.initStoryExtraView(storyExtra);
+                    }
+                });
+
     }
 
 }

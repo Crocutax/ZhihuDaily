@@ -3,14 +3,14 @@ package com.wangxw.zhihudaily.bean;
 /**
  * Created by wangxw on 2017/1/11 0011.
  * E-mail:wangxw725@163.com
- * function:
+ * function: 新闻额外信息
  */
 public class StoryExtra {
 
     private int long_comments;
-    private int popularity;
+    private int popularity;     //点赞总数
     private int short_comments;
-    private int comments;
+    private int comments;   //评论总数
 
     public int getLong_comments() {
         return long_comments;
@@ -42,5 +42,15 @@ public class StoryExtra {
 
     public void setComments(int comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return "StoryExtra{" +
+                "long_comments=" + long_comments +
+                ", popularity=" + popularity +
+                ", short_comments=" + short_comments +
+                ", comments=" + comments +
+                '}';
     }
 }

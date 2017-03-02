@@ -10,12 +10,9 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
-import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -26,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * function:
  */
 public class ApiManager {
+
 
     private static ZhihuApi mZhihuApi;
     /**默认网络超时时间*/
@@ -47,7 +45,7 @@ public class ApiManager {
                         .removeHeader("Cache-Control")
                         .header("Cache-Control", "public, max-age=" + maxAge)
                         .build();
-            }else {
+            } else {
                 // 离线时缓存时间为4周
                 int maxStale = 60 * 60 * 24 * 28;
                 return response.newBuilder()
@@ -74,17 +72,6 @@ public class ApiManager {
             //配置拦截器
             builder.addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                     .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR);
-
-           /* builder.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request request = chain.request();
-                    if(!NetworkUtil.networkIsConnect(MyApplication.getAppContext())){
-                        request = request.newBuilder().cacheControl(CacheControl.FORCE_CACHE).build();
-                    }
-                    return chain.proceed(request);
-                }
-            });*/
 
             OkHttpClient okHttpClient = builder.build();
             Retrofit retrofit = new Retrofit.Builder()

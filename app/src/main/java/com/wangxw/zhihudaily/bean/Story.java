@@ -12,7 +12,7 @@ import java.util.List;
  * E-mail:wangxw725@163.com
  * function: 新闻子条目
  */
-public class Story implements Serializable{
+public class Story {
 
     /**标题*/
     private String title;

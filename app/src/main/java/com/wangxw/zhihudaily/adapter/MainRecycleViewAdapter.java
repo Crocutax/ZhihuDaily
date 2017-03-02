@@ -199,7 +199,6 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             if(story.isMultipic()){
                 ivMainRecycleviewMultipic.setVisibility(View.VISIBLE);
-                Logger.d("显示多图标志");
             }
 
             newsListCardView.setOnClickListener(new View.OnClickListener() {

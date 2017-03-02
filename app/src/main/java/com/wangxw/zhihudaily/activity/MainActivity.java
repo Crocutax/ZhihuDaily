@@ -90,11 +90,7 @@ public class MainActivity extends BaseActivity<MainContract.IPresenter> implemen
         rvAdapter.setTopStoryItemClickListener(new MainRecycleViewAdapter.TopStoryItemClickListener() {
             @Override
             public void onTopStoryItemClick(TopStory topStory) {
-                Story story = new Story();
-                story.setTitle(topStory.getTitle());
-                story.setId(topStory.getId());
-                story.setImages(new String[]{topStory.getImage()});
-                startActivity(StoryDetailActivity.getIntent(MainActivity.this,story));
+                startActivity(StoryDetailActivity.getIntent(MainActivity.this,topStory.getId()));
             }
         });
 
@@ -102,7 +98,7 @@ public class MainActivity extends BaseActivity<MainContract.IPresenter> implemen
             @Override
             public void onStoryItemClick(Story story) {
                 //todo 改变已读标记,存储进数据库
-                startActivity(StoryDetailActivity.getIntent(MainActivity.this,story));
+                startActivity(StoryDetailActivity.getIntent(MainActivity.this,story.getId()));
             }
         });
     }
