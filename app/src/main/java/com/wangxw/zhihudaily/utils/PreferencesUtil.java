@@ -11,12 +11,17 @@ import android.content.SharedPreferences;
 public class PreferencesUtil {
 
     private static SharedPreferences sp;
-    private static final String SP_FILE_NAME = "config";
+    private static final String SP_FILE_NAME = "wangxw";
 
 
     public interface KEYS{
         String KEY_NIGHT_MODE = "KEY_NIGHT_MODE";
-        String KEY_FONT_SIZE = "KEY_FONT_LARGE";
+        String KEY_LARGE_FONT = "KEY_LARGE_FONT";
+        String KEY_NO_IMG = "KEY_NO_IMG";
+        String KEY_CLEAR_CACHE = "key_clear_cache";
+        String KEY_CHECK_UPDATE = "key_check_update";
+        String KEY_ABOUT_ME = "key_about_me";
+        String KEY_FEEDBACK = "key_feedback";
     }
 
 

@@ -26,7 +26,8 @@
             android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.StoryDetailActivity" />
-        <activity android:name=".activity.CommentsActivity"></activity>
+        <activity android:name=".activity.CommentsActivity" />
+        <activity android:name=".activity.SettingsActivity"></activity>
     </application>
 
 </manifest>

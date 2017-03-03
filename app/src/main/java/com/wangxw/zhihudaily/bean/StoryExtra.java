@@ -1,11 +1,14 @@
 package com.wangxw.zhihudaily.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by wangxw on 2017/1/11 0011.
  * E-mail:wangxw725@163.com
  * function: 新闻额外信息
  */
-public class StoryExtra {
+public class StoryExtra implements Parcelable {
 
     private int long_comments;
     private int popularity;     //点赞总数
@@ -53,4 +56,40 @@ public class StoryExtra {
                 ", comments=" + comments +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.long_comments);
+        dest.writeInt(this.popularity);
+        dest.writeInt(this.short_comments);
+        dest.writeInt(this.comments);
+    }
+
+    public StoryExtra() {
+    }
+
+    protected StoryExtra(Parcel in) {
+        this.long_comments = in.readInt();
+        this.popularity = in.readInt();
+        this.short_comments = in.readInt();
+        this.comments = in.readInt();
+    }
+
+    public static final Parcelable.Creator<StoryExtra> CREATOR = new Parcelable.Creator<StoryExtra>() {
+        @Override
+        public StoryExtra createFromParcel(Parcel source) {
+            return new StoryExtra(source);
+        }
+
+        @Override
+        public StoryExtra[] newArray(int size) {
+            return new StoryExtra[size];
+        }
+    };
 }

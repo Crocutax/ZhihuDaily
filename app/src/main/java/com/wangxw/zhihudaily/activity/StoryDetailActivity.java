@@ -67,6 +67,8 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
 
     private TextView tvCommentNum;
     private TextView tvLikeNum;
+    private StoryExtra mStoryExtra;
+    private int mStoryId;
 
     public static Intent getIntent(Context context,int storyId) {
         Intent intent = new Intent(context, StoryDetailActivity.class);
@@ -97,30 +99,29 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
         setSupportActionBar(toolbar);
         toolbarLayout.setTitle(" ");
 
-        //返回按钮
+        //显示返回键
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
         //从intent中取出数据
         Intent intent = getIntent();
         if (intent == null) {
             return;
         }
-        int storyId = intent.getIntExtra(STORY_ID, -1);
-        if(storyId!=-1) {
-            mPresenter.initData(storyId);
-            mPresenter.getStoreExtra(storyId);
+        mStoryId = intent.getIntExtra(STORY_ID, -1);
+        if(mStoryId !=-1) {
+            mPresenter.initData(mStoryId);
+            mPresenter.getStoreExtra(mStoryId);
         }
     }
 
     @Override
     protected void initListener() {
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -175,7 +176,7 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
         tvCommentNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(StoryDetailActivity.this, "跳往评论页面", Toast.LENGTH_SHORT).show();
+                startActivity(CommentsActivity.getIntent(StoryDetailActivity.this,mStoryId,mStoryExtra));
             }
         });
 
@@ -230,6 +231,7 @@ public class StoryDetailActivity extends BaseActivity<StoryDetailContract.IPrese
 
         //是否收藏从本地数据库查询
         //todo
+        mStoryExtra = storyExtra;
         Logger.d(storyExtra.toString());
         tvCommentNum.setText(formatNum(storyExtra.getComments()));
         tvLikeNum.setText(formatNum(storyExtra.getPopularity()));

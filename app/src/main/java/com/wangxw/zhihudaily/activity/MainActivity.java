@@ -1,5 +1,6 @@
 package com.wangxw.zhihudaily.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity<MainContract.IPresenter> implemen
     @Override
     protected void initView(Bundle savedInstanceState) {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.homepage_mainpage);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
         srlMainRefresh.setColorSchemeResources(R.color.colorPrimary);
@@ -123,11 +125,14 @@ public class MainActivity extends BaseActivity<MainContract.IPresenter> implemen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_message:
+                Snackbar.make(getWindow().getDecorView(), R.string.action_message, Snackbar.LENGTH_SHORT).show();
+                break;
             case R.id.action_night_mode:
                 Snackbar.make(getWindow().getDecorView(), R.string.action_night_mode, Snackbar.LENGTH_SHORT).show();
                 break;
             case R.id.action_settings:
-                Snackbar.make(getWindow().getDecorView(), R.string.action_settings, Snackbar.LENGTH_SHORT).show();
+               startActivity(new Intent(this,SettingsActivity.class));
                 break;
             default:
                 break;

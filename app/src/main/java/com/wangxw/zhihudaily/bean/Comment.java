@@ -61,4 +61,16 @@ public class Comment {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "author='" + author + '\'' +
+                ", id=" + id +
+                ", content='" + content + '\'' +
+                ", likes=" + likes +
+                ", time=" + time +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
 }

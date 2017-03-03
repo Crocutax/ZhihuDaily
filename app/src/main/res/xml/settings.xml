@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--常规-->
+    <PreferenceCategory android:title="@string/title_normal">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:summary="@string/summary_auto_load"
+            android:title="@string/title_auto_load" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="KEY_NO_IMG"
+            android:summary="@string/summary_no_load_img"
+            android:title="@string/title_no_load_img" />
+
+        <CheckBoxPreference
+            android:key="KEY_LARGE_FONT"
+            android:summary="@string/title_big_font" />
+
+    </PreferenceCategory>
+
+    <!--其他-->
+    <PreferenceCategory android:title="@string/title_other">
+
+
+        <!--清除缓存-->
+        <Preference
+            android:key="@string/key_clear_cache"
+            android:title="@string/title_clear_cache" />
+
+        <!--检查更新-->
+        <Preference
+            android:key="@string/key_check_update"
+            android:summary="@string/title_check_update"
+            android:title="@string/summary_current_version" />
+
+        <!--关于我-->
+        <Preference
+            android:key="@string/key_about_me"
+            android:title="@string/title_about_me" />
+
+    </PreferenceCategory>
+
+    <!--反馈-->
+    <PreferenceCategory android:title="@string/title_feedback">
+
+        <Preference
+            android:key="@string/key_feedback"
+            android:title="@string/title_advice" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
+
+
+
